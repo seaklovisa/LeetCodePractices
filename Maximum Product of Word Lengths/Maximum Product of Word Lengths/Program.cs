@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 namespace Maximum_Product_of_Word_Lengths
 {
@@ -8,6 +9,7 @@ namespace Maximum_Product_of_Word_Lengths
         {
             Solution solution = new Solution();
             string[] words = new string[] { };
+
             var result = solution.MaxProduct(words);
             Console.WriteLine("Hello World!");
         }
@@ -17,6 +19,9 @@ namespace Maximum_Product_of_Word_Lengths
     {
         public int MaxProduct(string[] words)
         {
+            HashSet<char[]> aaa = new HashSet<char[]>();
+            aaa.Add("abcdef".ToCharArray());
+            aaa.Add("xtfn".ToCharArray());
             return 1;
         }
     }
