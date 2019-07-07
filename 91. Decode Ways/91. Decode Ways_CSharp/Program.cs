@@ -7,7 +7,7 @@ namespace _91.Decode_Ways_CSharp
         static void Main(string[] args)
         {
             Solution solution = new Solution();
-            var result = solution.NumDecodings("12");
+            var result = solution.NumDecodings("9371597631128776948387197132267188677349946742344217846154932859125134924241649584251978418763151253");
             Console.ReadKey();
         }
     }
@@ -17,10 +17,6 @@ namespace _91.Decode_Ways_CSharp
 
         public int NumDecodings(string s)
         {
-            if (s.StartsWith("0") && s.Contains("0")) return 0;
-            if (s.Length == 1) return 1;
-           
-
             int totalcount = 0;
 
             totalcount += loopStr(s,0);
@@ -28,14 +24,19 @@ namespace _91.Decode_Ways_CSharp
             return totalcount;
         }
 
+        public int DFS(string s, int index)
+        {
+
+
+        }
+
         public int loopStr(string s,int indexer)
         {
             int index = indexer;
             int count = 0;
-            if (index + 1 >= s.Length)
+            if (index + 1 > s.Length)
             {
-                if (s.Substring(index, 1) == "0") return 0;
-                else return 1;
+                 return 1;
             }
             
             
@@ -60,7 +61,7 @@ namespace _91.Decode_Ways_CSharp
             }
             else if(part.Length == 2)
             {
-                if(intPart > 26 || intPart  == 0)
+                if(intPart > 26)
                 {
                     count += loopStr(s, ++index);
                 }
@@ -69,9 +70,14 @@ namespace _91.Decode_Ways_CSharp
                 {
                     count += loopStr(s, index += 2);
                 }
+                else if(intPart < 10)
+                {
+                    return 0;
+                }
                 else
                 {
                     count += loopStr(s, ++index);
+                    index = indexer;
                     count += loopStr(s, index += 2);
                 }
             }
