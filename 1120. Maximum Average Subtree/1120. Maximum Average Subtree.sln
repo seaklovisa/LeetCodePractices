@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1120. Maximum Average Subtree_CSharp", "1120. Maximum Average Subtree_CSharp\1120. Maximum Average Subtree_CSharp.csproj", "{8235F771-59A1-43DF-AED0-14AD0353ABCE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8235F771-59A1-43DF-AED0-14AD0353ABCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8235F771-59A1-43DF-AED0-14AD0353ABCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8235F771-59A1-43DF-AED0-14AD0353ABCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8235F771-59A1-43DF-AED0-14AD0353ABCE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {994811E2-2984-41FD-9631-6B3711F84CD9}
+	EndGlobalSection
+EndGlobal
