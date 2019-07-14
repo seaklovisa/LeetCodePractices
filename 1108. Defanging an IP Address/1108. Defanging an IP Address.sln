@@ -5,6 +5,11 @@ VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1108. Defanging an IP Address_CSharp", "1108. Defanging an IP Address_CSharp\1108. Defanging an IP Address_CSharp.csproj", "{F11E1C45-36A5-4CAA-A0A2-1D85702F44D6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7D022567-8DB1-41CA-82AC-BF387D654AB4}"
+	ProjectSection(SolutionItems) = preProject
+		readme.txt = readme.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
