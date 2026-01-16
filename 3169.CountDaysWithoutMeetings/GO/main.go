@@ -3,9 +3,41 @@ package main
 import "sort"
 
 func main() {
-	println(countDays(10, [][]int{{5, 7}, {1, 3}, {9, 10}}))
-	println(countDays(10, [][]int{{2, 4}, {1, 3}}))
-	println(countDays(10, [][]int{{1, 6}}))
+	println(countDays2(10, [][]int{{5, 7}, {1, 3}, {9, 10}}))
+	println(countDays2(10, [][]int{{2, 4}, {1, 3}}))
+	println(countDays2(10, [][]int{{1, 6}}))
+}
+
+func countDays2(days int, meetings [][]int) int {
+	//先依第一個元素排列
+	sort.Slice(meetings, func(i, j int) bool {
+		return meetings[i][0] < meetings[j][0]
+	})
+
+	curStart := meetings[0][0]
+	curEnd := meetings[0][1]
+	usedDays := 0
+
+	for _, next := range meetings[1:] {
+
+		nextStart := next[0]
+		nextEnd := next[1]
+
+		//表示有重疊
+		if curEnd <= nextStart {
+			curEnd = nextEnd
+		} else {
+			//沒有重疊 結算區間
+			usedDays += (curEnd - curStart + 1)
+			curStart = nextStart
+			curEnd = nextEnd
+		}
+	}
+
+	usedDays += (curEnd - curStart) + 1
+
+	return days - usedDays
+
 }
 
 func countDays(days int, meetings [][]int) int {
