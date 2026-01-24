@@ -4,8 +4,8 @@ import "sort"
 
 func main() {
 	println(countDays(10, [][]int{{5, 7}, {1, 3}, {9, 10}}))
-	println(countDays(10, [][]int{{2, 4}, {1, 3}}))
-	println(countDays(10, [][]int{{1, 6}}))
+	println(countDays(5, [][]int{{2, 4}, {1, 3}}))
+	println(countDays(6, [][]int{{1, 6}}))
 }
 
 func countDays(days int, meetings [][]int) int {
@@ -27,7 +27,7 @@ func countDays(days int, meetings [][]int) int {
 		nextStart := next[0]
 		nextEnd := next[1]
 
-		if nextEnd <= curEnd {
+		if nextStart <= curEnd {
 			curEnd = max(curEnd, nextEnd)
 		} else {
 			usedDays += curEnd - curStart + 1
