@@ -3,73 +3,36 @@ package main
 import "sort"
 
 func main() {
-<<<<<<< HEAD
-	println(countDays(10, [][]int{{5, 7}, {1, 3}, {9, 10}}))
-	println(countDays(5, [][]int{{2, 4}, {1, 3}}))
-	println(countDays(6, [][]int{{1, 6}}))
-=======
-	println(countDays2(10, [][]int{{5, 7}, {1, 3}, {9, 10}}))
-	println(countDays2(10, [][]int{{2, 4}, {1, 3}}))
-	println(countDays2(10, [][]int{{1, 6}}))
+	println(countDays3(10, [][]int{{5, 7}, {1, 3}, {9, 10}}))
+	println(countDays3(5, [][]int{{2, 4}, {1, 3}}))
+	println(countDays3(6, [][]int{{1, 6}}))
 }
 
-func countDays2(days int, meetings [][]int) int {
-	//先依第一個元素排列
+func countDays3(days int, meetings [][]int) int {
+	//1,3 5,7 9,10
 	sort.Slice(meetings, func(i, j int) bool {
 		return meetings[i][0] < meetings[j][0]
 	})
-
+	//1
 	curStart := meetings[0][0]
+	//3
 	curEnd := meetings[0][1]
 	usedDays := 0
 
 	for _, next := range meetings[1:] {
-
+		//5
 		nextStart := next[0]
+		//7
 		nextEnd := next[1]
-
-		//表示有重疊
-		if curEnd <= nextStart {
-			curEnd = nextEnd
-		} else {
-			//沒有重疊 結算區間
-			usedDays += (curEnd - curStart + 1)
-			curStart = nextStart
-			curEnd = nextEnd
-		}
-	}
-
-	usedDays += (curEnd - curStart) + 1
-
-	return days - usedDays
-
->>>>>>> bce139bae51948c2c15ebd34fdf6d89e38f31d36
-}
-
-func countDays(days int, meetings [][]int) int {
-	//先排序
-	sort.Slice(meetings, func(i, j int) bool {
-		return meetings[i][0]-meetings[j][0] < 0
-	})
-
-	//最新合併後的區間
-	//freedays = days - (所有會議區間佔用的天數總和)
-	//days - 最新合併後的區間 <= 0 則滿足天數 回應所缺天數
-	//days - 最新合併後的區間 > 0 則未滿足天數 繼續合併下一個
-
-	curStart := meetings[0][0]
-	curEnd := meetings[0][1]
-	usedDays := 0
-
-	for _, next := range meetings[1:] {
-		nextStart := next[0]
-		nextEnd := next[1]
-
-		if nextStart <= curEnd {
+		//有重疊，做合併區間
+		if curEnd >= nextStart {
 			curEnd = max(curEnd, nextEnd)
 		} else {
+			//沒有重疊 結算區間
 			usedDays += curEnd - curStart + 1
+			//5
 			curStart = nextStart
+			//7
 			curEnd = nextEnd
 		}
 	}
