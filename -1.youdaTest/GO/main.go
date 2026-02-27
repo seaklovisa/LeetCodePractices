@@ -1,27 +1,32 @@
 package main
 
-import (
-	"container/list"
-	"fmt"
-)
+import "container/heap"
 
-func main() {
+type IntHeap []int
 
-	fmt.Println(forLoopRecure(5))
+func (h IntHeap) Len() int {
+	return len(h)
+}
+func (h IntHeap) Less(i, j int) bool {
+	return h[i] < h[j]
+}
+func (h IntHeap) Swap(i, j int) {
+	h[i], h[j] = h[j], h[i]
+}
+func (h *IntHeap) Push(x any) {
+	*h = append(*h, x.(int))
 }
 
-func forLoopRecure(n int) int {
-	stack := list.New()
-	res := 0
+func (h *IntHeap) Pop() any {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}
 
-	for i := n; i > 0; i-- {
-		stack.PushBack(i)
-	}
+func main() {
+	h := &IntHeap{2, 1, 5}
+	heap.Init(h)
 
-	for stack.Len() != 0 {
-		res += stack.Back().Value.(int)
-		stack.Remove(stack.Back())
-	}
-
-	return res
 }
