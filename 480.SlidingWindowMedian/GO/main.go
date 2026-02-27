@@ -32,13 +32,6 @@ func (h *MaxHeap) Push(x any)        { *h = append(*h, x.(int)) }
 func (h *MaxHeap) Pop() any          { old := *h; n := len(old); x := old[n-1]; *h = old[:n-1]; return x }
 func (h MaxHeap) Top() int           { return h[0] }
 
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
 type DualHeap struct {
 	small *MaxHeap
 	large *MinHeap
@@ -78,7 +71,7 @@ func (dh *DualHeap) Insert(x int) {
 }
 
 // 邏輯刪除
-func (dh *DualHeap) Erase(x int) {
+func (dh *DualHeap) Remove(x int) {
 	dh.del[x]++
 
 	if x <= dh.small.Top() {
@@ -172,7 +165,7 @@ func medianSlidingWindow(nums []int, k int) []float64 {
 		dh.Insert(nums[i])
 
 		if i >= k {
-			dh.Erase(nums[i-k])
+			dh.Remove(nums[i-k])
 		}
 
 		if i >= k-1 {

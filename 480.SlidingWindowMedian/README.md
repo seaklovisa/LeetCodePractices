@@ -1,3 +1,5 @@
+![alt text](image.png)
+
 
 #如何取得中位數
 使用兩個head 
