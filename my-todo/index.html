@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>待辦事項</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 24px;
+      color: #1a1a1a;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .input-row input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-row input:focus {
+      border-color: #4a90d9;
+    }
+
+    .input-row button {
+      padding: 12px 20px;
+      background: #4a90d9;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .input-row button:hover { background: #3a7bc8; }
+
+    .filters {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 16px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .filters button {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #666;
+      transition: all 0.2s;
+    }
+
+    .filters button.active {
+      background: #4a90d9;
+      color: #fff;
+    }
+
+    .todo-list {
+      list-style: none;
+    }
+
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      transition: opacity 0.2s;
+    }
+
+    .todo-item.done { opacity: 0.55; }
+
+    .todo-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: #4a90d9;
+      flex-shrink: 0;
+    }
+
+    .todo-text {
+      flex: 1;
+      font-size: 16px;
+      word-break: break-word;
+    }
+
+    .todo-item.done .todo-text {
+      text-decoration: line-through;
+      color: #999;
+    }
+
+    .todo-text.editing {
+      border: 1px solid #4a90d9;
+      border-radius: 4px;
+      padding: 4px 8px;
+      outline: none;
+    }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      color: #ccc;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .delete-btn:hover { color: #e74c3c; }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 4px;
+      font-size: 14px;
+      color: #999;
+    }
+
+    .clear-btn {
+      background: none;
+      border: none;
+      color: #999;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .clear-btn:hover { color: #e74c3c; }
+
+    .empty {
+      text-align: center;
+      color: #bbb;
+      padding: 32px 0;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>待辦事項</h1>
+
+    <div class="input-row">
+      <input type="text" id="todoInput" placeholder="新增待辦事項..." autofocus>
+      <button onclick="addTodo()">新增</button>
+    </div>
+
+    <div class="filters">
+      <button class="active" data-filter="all" onclick="setFilter('all')">全部</button>
+      <button data-filter="active" onclick="setFilter('active')">未完成</button>
+      <button data-filter="done" onclick="setFilter('done')">已完成</button>
+    </div>
+
+    <ul class="todo-list" id="todoList"></ul>
+
+    <div class="footer" id="footer" style="display:none">
+      <span id="countText"></span>
+      <button class="clear-btn" onclick="clearDone()">清除已完成</button>
+    </div>
+  </div>
+
+  <script>
+    let todos = JSON.parse(localStorage.getItem('todos') || '[]');
+    let filter = 'all';
+
+    const input = document.getElementById('todoInput');
+    const list = document.getElementById('todoList');
+    const footer = document.getElementById('footer');
+    const countText = document.getElementById('countText');
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') addTodo();
+    });
+
+    function save() {
+      localStorage.setItem('todos', JSON.stringify(todos));
+    }
+
+    function addTodo() {
+      const text = input.value.trim();
+      if (!text) return;
+      todos.push({ id: Date.now(), text, done: false });
+      input.value = '';
+      save();
+      render();
+    }
+
+    function toggleTodo(id) {
+      const t = todos.find(t => t.id === id);
+      if (t) t.done = !t.done;
+      save();
+      render();
+    }
+
+    function deleteTodo(id) {
+      todos = todos.filter(t => t.id !== id);
+      save();
+      render();
+    }
+
+    function editTodo(id, el) {
+      el.contentEditable = true;
+      el.classList.add('editing');
+      el.focus();
+
+      const finish = () => {
+        el.contentEditable = false;
+        el.classList.remove('editing');
+        const newText = el.textContent.trim();
+        const t = todos.find(t => t.id === id);
+        if (t) {
+          t.text = newText || t.text;
+        }
+        save();
+        render();
+      };
+
+      el.onblur = finish;
+      el.onkeydown = e => {
+        if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+        if (e.key === 'Escape') { el.blur(); }
+      };
+    }
+
+    function setFilter(f) {
+      filter = f;
+      document.querySelectorAll('.filters button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.filter === f);
+      });
+      render();
+    }
+
+    function clearDone() {
+      todos = todos.filter(t => !t.done);
+      save();
+      render();
+    }
+
+    function render() {
+      const filtered = todos.filter(t => {
+        if (filter === 'active') return !t.done;
+        if (filter === 'done') return t.done;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        list.innerHTML = '<li class="empty">沒有待辦事項</li>';
+      } else {
+        list.innerHTML = filtered.map(t => `
+          <li class="todo-item ${t.done ? 'done' : ''}">
+            <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTodo(${t.id})">
+            <span class="todo-text" ondblclick="editTodo(${t.id}, this)">${escapeHtml(t.text)}</span>
+            <button class="delete-btn" onclick="deleteTodo(${t.id})">&times;</button>
+          </li>
+        `).join('');
+      }
+
+      const activeCount = todos.filter(t => !t.done).length;
+      const doneCount = todos.filter(t => t.done).length;
+      footer.style.display = todos.length ? 'flex' : 'none';
+      countText.textContent = `${activeCount} 項未完成`;
+      document.querySelector('.clear-btn').style.visibility = doneCount ? 'visible' : 'hidden';
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    render();
+  </script>
+</body>
+</html>
