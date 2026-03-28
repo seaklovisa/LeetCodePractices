@@ -1,6 +1,7 @@
 package main
 
 import (
+	"container/heap"
 	"fmt"
 )
 
@@ -38,6 +39,28 @@ type ListNode struct {
 	Next *ListNode
 }
 
+type MinHeap []*ListNode
+
+func (h MinHeap) Len() int { return len(h) }
+func (h MinHeap) Less(i, j int) bool {
+	return h[i].Val < h[j].Val
+}
+func (h MinHeap) Swap(i, j int) {
+	h[i], h[j] = h[j], h[i]
+}
+
+func (h *MinHeap) Push(x any) {
+	*h = append(*h, x.(*ListNode))
+}
+
+func (h *MinHeap) Pop() any {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[:n-1]
+	return x
+}
+
 /**
  * Definition for singly-linked list.
  * type ListNode struct {
@@ -46,8 +69,29 @@ type ListNode struct {
  * }
  */
 func mergeKLists(lists []*ListNode) *ListNode {
+	h := &MinHeap{}
+	heap.Init(h)
 
-	//幾串listNode
-	n := len(lists)
+	// 初始化
+	for _, l := range lists {
+		if l != nil {
+			heap.Push(h, l)
+		}
+	}
 
+	dummy := &ListNode{}
+	cur := dummy
+
+	for h.Len() > 0 {
+		node := heap.Pop(h).(*ListNode)
+
+		cur.Next = node
+		cur = cur.Next
+
+		if node.Next != nil {
+			heap.Push(h, node.Next)
+		}
+	}
+
+	return dummy.Next
 }
