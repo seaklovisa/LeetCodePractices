@@ -43,7 +43,7 @@ func verticalTraversal(root *TreeNode) [][]int {
 			return nodes[i].col < nodes[j].col
 		}
 		if nodes[i].row != nodes[j].row {
-			return nodes[j].row < nodes[j].row
+			return nodes[i].row < nodes[j].row
 		}
 
 		return nodes[i].val < nodes[j].val
